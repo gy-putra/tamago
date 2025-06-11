@@ -2,8 +2,10 @@ import { Separator } from "@/components/ui/separator";
 import { getShoe } from "@/lib/action/shoes.action";
 import Link from "next/link";
 
-const ShoesDetail = async ({ params }: { params: { id: string } }) => {
-  const shoe = await getShoe(params.id);
+const ShoesDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const id = (await params).id;
+
+  const shoe = await getShoe(id);
 
   return (
     <div className="flex gap-10 md:px-16 px-4 py-10">
