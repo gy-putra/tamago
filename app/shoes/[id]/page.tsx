@@ -8,11 +8,11 @@ const ShoesDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
   const shoe = await getShoe(id);
 
   return (
-    <div className="flex gap-10 md:px-16 px-4 py-10">
-      <div className="w-1/2">
+    <div className="flex md:flex-row flex-col gap-10 md:px-16 px-4 py-10">
+      <div className="md:w-1/2 w-full">
         <img src={shoe?.image} alt={shoe?.name} className="rounded-md" />
       </div>
-      <div className="w-1/2">
+      <div className="md:w-1/2 w-full">
         <div className="flex flex-col gap-5">
           <div className="flex flex-col">
             <h2 className="text-2xl">NAMA PRODUK</h2>
