@@ -25,6 +25,11 @@ const ShoesDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
             <p className="text-muted-foreground">{shoe?.description}</p>
           </div>
           <div className="flex flex-col">
+            <h2 className="text-2xl">STOK</h2>
+            <Separator />
+            <p className="text-muted-foreground">{shoe?.stock}</p>
+          </div>
+          <div className="flex flex-col">
             <h3 className="text-2xl">HARGA</h3>
             <Separator />
             <p className="text-muted-foreground">
