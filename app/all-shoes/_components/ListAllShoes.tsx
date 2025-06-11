@@ -14,7 +14,7 @@ const ListAllShoes = ({ shoes }: { shoes: any }) => {
   return (
     <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-4">
       {shoes.map((shoe: any) => (
-        <Card>
+        <Card key={shoe.id}>
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle>{shoe.name}</CardTitle>
