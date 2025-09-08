@@ -5,13 +5,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Fingerprint } from "lucide-react";
+import { Fingerprint, Heart } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
 import Link from "next/link";
-import { auth } from "@/auth";
+import CartIcon from "./CartIcon";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
-const SheetNavbar = async () => {
-  const session = await auth();
+const SheetNavbar = () => {
 
   return (
     <div className="md:hidden block">
@@ -21,7 +21,7 @@ const SheetNavbar = async () => {
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle className="text-3xl">TAMAGO.ID</SheetTitle>
+            <SheetTitle className="text-3xl brand-logo">TAMAGO.ID</SheetTitle>
           </SheetHeader>
           <div className="px-4 flex flex-col gap-10">
             <div className="flex flex-col gap-4">
@@ -33,7 +33,7 @@ const SheetNavbar = async () => {
               </Link>
 
               <Link
-                href="https://wa.me/6285772723758?text=Halo%20TAMAGO.ID%2C%20saya%20ingin%20bertanya%20tentang%20produk%20anda"
+                href="/contact"
                 className="border px-6 py-3 rounded-full shadow-md"
               >
                 CONTACT
@@ -44,14 +44,40 @@ const SheetNavbar = async () => {
               >
                 SHOP
               </Link>
+              <Link
+                href="/checkout"
+                className="border px-6 py-3 rounded-full shadow-md"
+              >
+                CART
+              </Link>
+              <SignedIn>
+                <Link
+                  href="/wishlist"
+                  className="border px-6 py-3 rounded-full shadow-md flex items-center justify-center gap-2"
+                >
+                  <Heart className="h-4 w-4" />
+                  WISHLIST
+                </Link>
+              </SignedIn>
             </div>
-            <Link
-              href={session ? "/admin" : "/sign-in"}
-              className="border px-6 text-center py-3 rounded-full shadow-md bg-indigo-500"
-            >
-              ADMIN
-            </Link>
-            <ModeToggle />
+            <div className="flex items-center justify-between">
+              <ModeToggle />
+              <CartIcon />
+            </div>
+            <div className="flex flex-col gap-4">
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button className="border px-6 py-3 rounded-full shadow-md">
+                    Sign In
+                  </button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <div className="flex justify-center">
+                  <UserButton />
+                </div>
+              </SignedIn>
+            </div>
           </div>
         </SheetContent>
       </Sheet>

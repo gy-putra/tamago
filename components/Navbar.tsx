@@ -1,8 +1,9 @@
 import Link from "next/link";
 import SheetNavbar from "./SheetNavbar";
 import { ModeToggle } from "./ModeToggle";
-import { auth } from "@/auth";
-import SignOut from "@/app/(auth)/_components/SignOut";
+import CartIcon from "./CartIcon";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { Heart } from "lucide-react";
 
 const navItems = [
   {
@@ -15,18 +16,16 @@ const navItems = [
   },
   {
     name: "Contact",
-    href: "https://wa.me/6285772723758?text=Halo%20TAMAGO.ID%2C%20saya%20ingin%20bertanya%20tentang%20produk%20anda",
+    href: "/contact",
   },
 ];
 
-const Navbar = async () => {
-  const session = await auth();
-
+const Navbar = () => {
   return (
     <nav className="sticky top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
       <div className="flex h-16 items-center justify-between md:px-16 px-4 py-4 gap-4">
         <Link href={"/"} className="flex items-center">
-          <h3 className="text-3xl">TAMAGO.ID</h3>
+          <h3 className="text-3xl brand-logo">TAMAGO.ID</h3>
         </Link>
         <div className="md:flex hidden gap-4 items-center">
           {navItems.map((item, idx) => (
@@ -38,13 +37,24 @@ const Navbar = async () => {
               {item.name}
             </Link>
           ))}
-          <Link
-            href={session ? "/admin" : "/sign-in"}
-            className="border px-4 py-2 rounded-full"
-          >
-            ADMIN
-          </Link>
-          {session && <SignOut />}
+          <CartIcon />
+          <SignedIn>
+            <Link 
+              href="/wishlist" 
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              title="Wishlist"
+            >
+              <Heart className="h-5 w-5" />
+            </Link>
+            <UserButton />
+          </SignedIn>
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button className="border px-4 py-2 rounded-full">
+                Sign In
+              </button>
+            </SignInButton>
+          </SignedOut>
           <ModeToggle />
         </div>
         <SheetNavbar />

@@ -12,7 +12,7 @@ const Footer = () => {
         <div className="flex md:flex-row flex-col items-center gap-4 text-muted-foreground tracking-widest ">
           <Link href="/">BERANDA</Link>
           <Link href="/all-shoes">PRODUK</Link>
-          <Link href="https://wa.me/6285772723758?text=Halo%20TAMAGO.ID%2C%20saya%20ingin%20bertanya%20tentang%20produk%20anda">
+          <Link href="/contact">
             KONTAK
           </Link>
         </div>

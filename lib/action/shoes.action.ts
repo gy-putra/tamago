@@ -46,14 +46,53 @@ export const getShoe = async (id: string) => {
   }
 };
 
-export const getAllShoes = async () => {
+export const getAllShoes = async (sortBy?: "newest" | "price_asc" | "rating_desc") => {
   try {
     const shoes = await prisma.product.findMany({
+      include: {
+        reviews: {
+          select: {
+            rating: true,
+          },
+        },
+      },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "desc", // Default sort, will be overridden for price_asc
       },
     });
-    return shoes;
+
+    // Calculate average rating for each product
+    const shoesWithRatings = shoes.map((shoe) => {
+      const reviews = shoe.reviews;
+      const totalReviews = reviews.length;
+      const averageRating = totalReviews > 0 
+        ? reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews
+        : 0;
+
+      return {
+        ...shoe,
+        averageRating: Number(averageRating.toFixed(1)),
+        totalReviews,
+      };
+    });
+
+    // Apply sorting based on sortBy parameter
+    let sortedShoes = [...shoesWithRatings];
+    
+    switch (sortBy) {
+      case "price_asc":
+        sortedShoes.sort((a, b) => a.price - b.price);
+        break;
+      case "rating_desc":
+        sortedShoes.sort((a, b) => b.averageRating - a.averageRating);
+        break;
+      case "newest":
+      default:
+        // Already sorted by createdAt desc from the query
+        break;
+    }
+
+    return sortedShoes;
   } catch (error) {
     console.log(error);
   }
