@@ -42,7 +42,7 @@ export const getShoe = async (id: string) => {
     });
     return shoes;
   } catch (error) {
-    console.log(error);
+    console.error("Error in shoes action:", error);
   }
 };
 
@@ -99,7 +99,7 @@ export const getAllShoes = async (sortBy?: "newest" | "price_asc" | "rating_desc
 
     return sortedShoes;
   } catch (error) {
-    console.log(error);
+    console.error("Error in shoes action:", error);
   }
 };
 
@@ -155,7 +155,7 @@ export const getNewShoes = async () => {
     });
     return shoes;
   } catch (error) {
-    console.log(error);
+    console.error("Error in shoes action:", error);
   }
 };
 
@@ -169,7 +169,7 @@ export const getPricyShoes = async () => {
     });
     return shoes;
   } catch (error) {
-    console.log(error);
+    console.error("Error in shoes action:", error);
   }
 };
 
@@ -183,6 +183,6 @@ export const takeFourShoes = async () => {
     });
     return shoes;
   } catch (error) {
-    console.log(error);
+    console.error("Error in shoes action:", error);
   }
 };

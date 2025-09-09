@@ -68,7 +68,7 @@ const UpdateShoes = ({ shoe }: { shoe: any }) => {
         throw new Error("Gagal update");
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error updating product:", error);
       toast.error("Gagal memperbarui sepatu");
     } finally {
       setIsLoading(false);

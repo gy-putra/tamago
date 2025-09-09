@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import NextTopLoader from "nextjs-toploader";
 import { CartProvider } from "@/contexts/CartContext";
 import { ClerkProvider } from "@clerk/nextjs";
+import AIShoppingAssistant from "@/components/AIShoppingAssistant";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -47,6 +48,7 @@ export default function RootLayout({
               {children}
               <Toaster />
               <Footer />
+              <AIShoppingAssistant />
             </CartProvider>
           </ThemeProvider>
         </body>

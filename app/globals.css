@@ -142,6 +142,58 @@
   -webkit-line-clamp: 2;
 }
 
+/* Hide scrollbar for horizontal scroll */
+.scrollbar-hide {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Custom scrollbar styling for horizontal scroll */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thumb-gray-400::-webkit-scrollbar-thumb {
+  background-color: rgb(156 163 175);
+  border-radius: 9999px;
+}
+
+.scrollbar-track-transparent::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+/* Full-width carousel - hide scrollbar completely */
+.carousel-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.carousel-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mobile optimization - hide scrollbar on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .scrollbar-thin {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Font utilities */
 .font-heading {
   font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
@@ -157,4 +209,21 @@
   font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
   font-weight: 700;
   letter-spacing: 0.1em;
+}
+
+/* Enhanced horizontal scrolling performance */
+.scroll-container {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Mobile scroll optimization */
+@media (hover: none) and (pointer: coarse) {
+  .scroll-container {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scroll-container::-webkit-scrollbar {
+    display: none;
+  }
 }

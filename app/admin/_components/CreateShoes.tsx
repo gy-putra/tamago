@@ -53,7 +53,7 @@ const CreateShoes = () => {
         toast.success("Sepatu berhasil ditambahkan");
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error creating product:", error);
       toast.error("Sepatu gagal ditambahkan");
     } finally {
       setIsLoading(false);

@@ -50,8 +50,6 @@ const ListShoes = ({ shoes }: { shoes: any }) => {
     description: "",
   });
 
-  console.log(shoes);
-
   let no = 1;
 
   const handleDeleteShoes = async (id: string) => {
