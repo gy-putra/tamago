@@ -37,9 +37,8 @@ const SignUpPage = async ({ searchParams }: SignUpPageProps) => {
               },
             }}
             routing="hash"
-            signInUrl="/sign-in"
-            forceRedirectUrl={redirect_url || "/"}
-            fallbackRedirectUrl={redirect_url || "/"}
+            forceRedirectUrl={redirect_url || process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL}
+            fallbackRedirectUrl={redirect_url || process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL}
           />
         </Suspense>
       </div>
