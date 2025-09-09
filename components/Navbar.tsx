@@ -25,7 +25,7 @@ const Navbar = () => {
     <nav className="sticky top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
       <div className="flex h-16 items-center justify-between md:px-16 px-4 py-4 gap-4">
         <Link href={"/"} className="flex items-center">
-          <h3 className="text-3xl brand-logo">TAMAGO.ID</h3>
+          <h3 className="text-sm sm:text-3xl brand-logo">TAMAGO.ID</h3>
         </Link>
         <div className="md:flex hidden gap-4 items-center">
           {navItems.map((item, idx) => (
@@ -57,7 +57,21 @@ const Navbar = () => {
           </SignedOut>
           <ModeToggle />
         </div>
-        <SheetNavbar />
+        
+        {/* Mobile Icons and Menu */}
+        <div className="md:hidden flex items-center gap-3">
+          <SignedIn>
+            <Link 
+              href="/wishlist" 
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              title="Wishlist"
+            >
+              <Heart className="h-4 w-4" />
+            </Link>
+          </SignedIn>
+          <CartIcon />
+          <SheetNavbar />
+        </div>
       </div>
     </nav>
   );

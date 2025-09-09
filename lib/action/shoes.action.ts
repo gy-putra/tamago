@@ -61,7 +61,7 @@ export const getAllShoes = async (sortBy?: "newest" | "price_asc" | "rating_desc
       },
     });
 
-    // Calculate average rating for each product
+    // Calculate average rating and bestseller status for each product
     const shoesWithRatings = shoes.map((shoe) => {
       const reviews = shoe.reviews;
       const totalReviews = reviews.length;
@@ -69,10 +69,15 @@ export const getAllShoes = async (sortBy?: "newest" | "price_asc" | "rating_desc
         ? reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews
         : 0;
 
+      // Determine if product is a bestseller
+      // Criteria: Rating ≥ 4.5 OR soldCount ≥ 50
+      const isBestseller = averageRating >= 4.5 || (shoe.soldCount || 0) >= 50;
+
       return {
         ...shoe,
         averageRating: Number(averageRating.toFixed(1)),
         totalReviews,
+        isBestseller,
       };
     });
 

@@ -5,10 +5,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Fingerprint, Heart } from "lucide-react";
+import { Fingerprint } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
 import Link from "next/link";
-import CartIcon from "./CartIcon";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 const SheetNavbar = () => {
@@ -44,25 +43,9 @@ const SheetNavbar = () => {
               >
                 SHOP
               </Link>
-              <Link
-                href="/checkout"
-                className="border px-6 py-3 rounded-full shadow-md"
-              >
-                CART
-              </Link>
-              <SignedIn>
-                <Link
-                  href="/wishlist"
-                  className="border px-6 py-3 rounded-full shadow-md flex items-center justify-center gap-2"
-                >
-                  <Heart className="h-4 w-4" />
-                  WISHLIST
-                </Link>
-              </SignedIn>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex justify-center">
               <ModeToggle />
-              <CartIcon />
             </div>
             <div className="flex flex-col gap-4">
               <SignedOut>

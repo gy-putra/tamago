@@ -44,13 +44,17 @@ export async function GET() {
       },
     });
 
-    // Calculate average ratings for products
+    // Calculate average ratings and bestseller status for products
     const wishlistWithRatings = wishlistItems.map((item) => {
       const reviews = item.product.reviews;
       const totalReviews = reviews.length;
       const averageRating = totalReviews > 0 
         ? reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews
         : 0;
+
+      // Determine if product is a bestseller
+      // Criteria: Rating ≥ 4.5 OR soldCount ≥ 50
+      const isBestseller = averageRating >= 4.5 || (item.product.soldCount || 0) >= 50;
 
       return {
         id: item.id,
@@ -59,6 +63,7 @@ export async function GET() {
           ...item.product,
           averageRating: Number(averageRating.toFixed(1)),
           totalReviews,
+          isBestseller,
         },
       };
     });

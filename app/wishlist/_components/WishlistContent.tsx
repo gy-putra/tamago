@@ -17,6 +17,7 @@ import StarRating from "@/components/StarRating";
 import AddToCartButton from "@/components/AddToCartButton";
 import WishlistButton from "@/components/WishlistButton";
 import DiscountBadge from "@/components/DiscountBadge";
+import BestsellerBadge from "@/components/BestsellerBadge";
 import { Heart, ShoppingBag } from "lucide-react";
 
 interface WishlistItem {
@@ -31,6 +32,7 @@ interface WishlistItem {
     stock?: number;
     averageRating: number;
     totalReviews: number;
+    isBestseller?: boolean;
   };
 }
 
@@ -105,6 +107,11 @@ const WishlistContent = () => {
             {/* Discount Badge */}
             {hasDiscount && (
               <DiscountBadge discountPercentage={discountPercentage} />
+            )}
+            
+            {/* Bestseller Badge */}
+            {product.isBestseller && (
+              <BestsellerBadge className={hasDiscount ? "top-12" : ""} />
             )}
             
             {/* Wishlist Button */}

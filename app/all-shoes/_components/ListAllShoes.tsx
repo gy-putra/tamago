@@ -15,6 +15,7 @@ import AddToCartButton from "@/components/AddToCartButton";
 import { formatCurrency } from "@/lib/formatCurrency";
 import StarRating from "@/components/StarRating";
 import DiscountBadge from "@/components/DiscountBadge";
+import BestsellerBadge from "@/components/BestsellerBadge";
 import WishlistButton from "@/components/WishlistButton";
 
 const ListAllShoes = ({ shoes }: { shoes: any }) => {
@@ -38,12 +39,17 @@ const ListAllShoes = ({ shoes }: { shoes: any }) => {
             <DiscountBadge discountPercentage={discountPercentage} />
           )}
           
+          {/* Bestseller Badge */}
+          {shoe.isBestseller && (
+            <BestsellerBadge className={hasDiscount ? "top-12" : ""} />
+          )}
+          
           {/* Wishlist Button */}
           <WishlistButton productId={shoe.id} />
           
           <CardHeader>
             <div className="flex justify-between items-center">
-              <CardTitle>{shoe.name}</CardTitle>
+              {/* <CardTitle>{shoe.name}</CardTitle> */}
               {/* <CardAction>
                 <Link
                   href={`/shoes/${shoe.id}`}
@@ -64,6 +70,7 @@ const ListAllShoes = ({ shoes }: { shoes: any }) => {
             />
           </CardContent>
           <CardFooter className="flex flex-col gap-2">
+            <CardTitle>{shoe.name}</CardTitle>
             {/* Price Display with Discount Support */}
             <div className="text-muted-foreground w-full">
               {hasDiscount ? (
