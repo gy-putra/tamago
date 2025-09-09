@@ -10,6 +10,7 @@ const isPublicRoute = createRouteMatcher([
   "/sign-up(.*)",
   "/admin/login",
   "/api/uploadthing",
+  "/api/webhooks(.*)",
 ]);
 
 const isAdminRoute = createRouteMatcher([
@@ -17,13 +18,10 @@ const isAdminRoute = createRouteMatcher([
   "/admin/(.*)",
 ]);
 
-const isCheckoutRoute = createRouteMatcher([
+const isProtectedRoute = createRouteMatcher([
   "/checkout",
   "/orders/(.*)",
   "/wishlist",
-]);
-
-const isProductRoute = createRouteMatcher([
   "/all-shoes",
   "/shoes/(.*)",
 ]);
@@ -31,27 +29,23 @@ const isProductRoute = createRouteMatcher([
 export default clerkMiddleware(async (auth, req) => {
   const { pathname } = req.nextUrl;
 
-  // Handle admin routes with NextAuth
+  // Handle admin routes with NextAuth (skip Clerk for admin routes)
   if (isAdminRoute(req) && pathname !== "/admin/login") {
     const session = await nextauth();
     
     if (!session?.user || session.user.email !== "admintamago@gmail.com") {
       return NextResponse.redirect(new URL("/admin/login", req.url));
     }
+    return NextResponse.next();
   }
 
-  // Handle user routes with Clerk - protect checkout, order, and wishlist routes
-  if (isCheckoutRoute(req)) {
-    const { userId } = await auth();
-    if (!userId) {
-      const signInUrl = new URL("/sign-in", req.url);
-      signInUrl.searchParams.set("redirect_url", req.url);
-      return NextResponse.redirect(signInUrl);
-    }
+  // Skip Clerk protection for public routes
+  if (isPublicRoute(req)) {
+    return NextResponse.next();
   }
 
-  // Handle product routes with Clerk - protect product pages
-  if (isProductRoute(req)) {
+  // Protect routes that require Clerk authentication
+  if (isProtectedRoute(req)) {
     const { userId } = await auth();
     if (!userId) {
       const signInUrl = new URL("/sign-in", req.url);
@@ -65,7 +59,7 @@ export default clerkMiddleware(async (auth, req) => {
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
+    // Skip Next.js internals and all static files
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
     // Always run for API routes
     '/(api|trpc)(.*)',

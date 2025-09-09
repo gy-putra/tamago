@@ -2,7 +2,7 @@ import Link from "next/link";
 import SheetNavbar from "./SheetNavbar";
 import { ModeToggle } from "./ModeToggle";
 import CartIcon from "./CartIcon";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Heart } from "lucide-react";
 
 const navItems = [
@@ -49,11 +49,11 @@ const Navbar = () => {
             <UserButton />
           </SignedIn>
           <SignedOut>
-            <SignInButton mode="modal">
+            <Link href="/sign-in">
               <button className="border px-4 py-2 rounded-full">
                 Sign In
               </button>
-            </SignInButton>
+            </Link>
           </SignedOut>
           <ModeToggle />
         </div>

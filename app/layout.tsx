@@ -34,15 +34,15 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider
-      signInUrl={process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL}
-      signUpUrl={process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL}
-      afterSignInUrl={process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL}
-      afterSignUpUrl={process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL}
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+      afterSignInUrl="/all-shoes"
+      afterSignUpUrl="/all-shoes"
     >
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body className={`${montserrat.variable} ${inter.variable} antialiased`}>
           <ThemeProvider
-            attribute={"class"}
+            attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange

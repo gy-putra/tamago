@@ -1,21 +1,13 @@
 import { SignUp } from "@clerk/nextjs";
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
 
 interface SignUpPageProps {
   searchParams: Promise<{ redirect_url?: string }>;
 }
 
 const SignUpPage = async ({ searchParams }: SignUpPageProps) => {
-  // Check if user is already authenticated
-  const { userId } = await auth();
   const { redirect_url } = await searchParams;
   
-  // If user is already authenticated, redirect them
-  if (userId) {
-    redirect(redirect_url || "/");
-  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -36,9 +28,8 @@ const SignUpPage = async ({ searchParams }: SignUpPageProps) => {
                 card: "shadow-lg",
               },
             }}
-            routing="hash"
-            forceRedirectUrl={redirect_url || process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL}
-            fallbackRedirectUrl={redirect_url || process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL}
+            forceRedirectUrl={redirect_url || "/all-shoes"}
+            fallbackRedirectUrl={redirect_url || "/all-shoes"}
           />
         </Suspense>
       </div>
