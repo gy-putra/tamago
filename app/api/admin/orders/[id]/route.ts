@@ -1,6 +1,7 @@
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { currentUser } from "@clerk/nextjs/server";
 
 interface RouteParams {
   params: Promise<{
@@ -10,9 +11,9 @@ interface RouteParams {
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const session = await auth();
+    const user = await currentUser();
     
-    if (!session || session.user?.email !== "admintamago@gmail.com") {
+    if (!user || user.emailAddresses[0]?.emailAddress !== "admintamago@gmail.com") {
       return NextResponse.json(
         { error: "Admin access required" },
         { status: 403 }
@@ -59,9 +60,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
-    const session = await auth();
+    const user = await currentUser();
     
-    if (!session || session.user?.email !== "admintamago@gmail.com") {
+    if (!user || user.emailAddresses[0]?.emailAddress !== "admintamago@gmail.com") {
       return NextResponse.json(
         { error: "Admin access required" },
         { status: 403 }

@@ -52,19 +52,33 @@ const AdminReviewsList = () => {
 
   const fetchReviews = async () => {
     try {
-      // Since we don't have a specific admin endpoint for all reviews,
-      // we'll need to create one or fetch reviews differently
-      const response = await fetch("/api/admin/reviews");
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+      const response = await fetch(`${baseUrl}/api/admin/reviews`, {
+        method: 'GET',
+        credentials: 'include',
+        cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       
-      if (response.ok) {
-        const data = await response.json();
-        setReviews(data.reviews);
-      } else {
-        toast.error("Failed to fetch reviews");
+      if (!response.ok) {
+        if (response.status === 401) {
+          toast.error("Authentication required. Please sign in.");
+          return;
+        }
+        if (response.status === 403) {
+          toast.error("Admin access required.");
+          return;
+        }
+        throw new Error(`Failed to fetch reviews: ${response.status}`);
       }
+      
+      const data = await response.json();
+      setReviews(data.reviews || []);
     } catch (error) {
       console.error("Error fetching reviews:", error);
-      toast.error("Failed to load reviews");
+      toast.error("Failed to load reviews. Please try again.");
     } finally {
       setLoading(false);
     }

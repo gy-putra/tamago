@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,27 +13,36 @@ const AdminLoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { signIn, isLoaded } = useSignIn();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!isLoaded) return;
+    
+    // Check if the email is the admin email
+    if (email !== "admintamago@gmail.com") {
+      toast.error("Admin access required");
+      return;
+    }
+    
     setIsLoading(true);
 
     try {
-      const result = await signIn("credentials", {
-        email,
+      const result = await signIn.create({
+        identifier: email,
         password,
-        redirect: false,
       });
 
-      if (result?.error) {
-        toast.error("Invalid admin credentials");
-      } else {
+      if (result.status === "complete") {
         toast.success("Admin login successful");
         router.push("/admin");
+      } else {
+        toast.error("Invalid admin credentials");
       }
-    } catch (error) {
-      toast.error("Login failed");
+    } catch (error: any) {
+      toast.error(error.errors?.[0]?.message || "Login failed");
     } finally {
       setIsLoading(false);
     }

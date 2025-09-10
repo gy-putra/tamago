@@ -51,15 +51,33 @@ const AdminOrdersList = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch("/api/admin/orders");
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+      const response = await fetch(`${baseUrl}/api/admin/orders`, {
+        method: 'GET',
+        credentials: 'include',
+        cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
       if (!response.ok) {
-        throw new Error("Failed to fetch orders");
+        if (response.status === 401) {
+          toast.error("Authentication required. Please sign in.");
+          return;
+        }
+        if (response.status === 403) {
+          toast.error("Admin access required.");
+          return;
+        }
+        throw new Error(`Failed to fetch orders: ${response.status}`);
       }
+      
       const data = await response.json();
-      setOrders(data.orders);
+      setOrders(data.orders || []);
     } catch (error) {
       console.error("Error fetching orders:", error);
-      toast.error("Failed to load orders");
+      toast.error("Failed to load orders. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -67,8 +85,10 @@ const AdminOrdersList = () => {
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
-      const response = await fetch(`/api/admin/orders/${orderId}`, {
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+      const response = await fetch(`${baseUrl}/api/admin/orders/${orderId}`, {
         method: "PATCH",
+        credentials: 'include',
         headers: {
           "Content-Type": "application/json",
         },

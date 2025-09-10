@@ -1,12 +1,21 @@
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { currentUser } from "@clerk/nextjs/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
+    const user = await currentUser();
     
-    if (!session || session.user?.email !== "admintamago@gmail.com") {
+    if (!user) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    const userRole = user.publicMetadata?.role as string;
+    if (userRole !== "admin") {
       return NextResponse.json(
         { error: "Admin access required" },
         { status: 403 }
