@@ -17,7 +17,8 @@ import {
   User,
   LogIn,
   LogOut,
-  Settings
+  Settings,
+  Package
 } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
 import Link from "next/link";
@@ -73,6 +74,12 @@ const SheetNavbar = () => {
       label: "Cart",
       href: "/checkout",
       icon: ShoppingCart,
+      requiresAuth: true,
+    },
+    {
+      label: "My Orders",
+      href: "/my-orders",
+      icon: Package,
       requiresAuth: true,
     },
     {

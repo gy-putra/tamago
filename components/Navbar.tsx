@@ -86,22 +86,23 @@ const Navbar = () => {
         {/* Mobile Icons and Menu */}
         <div className="md:hidden flex items-center gap-3">
           <SignedIn>
-            <Link 
+            {/* <Link 
               href="/wishlist" 
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               title="Wishlist"
             >
               <Heart className="h-4 w-4" />
-            </Link>
-            <Link 
+            </Link> */}
+            {/* <Link 
               href="/my-orders" 
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               title="My Orders"
             >
               <Package className="h-4 w-4" />
-            </Link>
+            </Link> */}
           </SignedIn>
-          <CartIcon />
+          <ModeToggle />
+          {/* <CartIcon /> */}
           <SheetNavbar />
         </div>
       </div>
