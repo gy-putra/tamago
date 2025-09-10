@@ -1,14 +1,11 @@
-import { auth as nextauth } from "@/auth";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
 const isPublicRoute = createRouteMatcher([
   "/",
   "/contact",
   "/sign-in(.*)",
   "/sign-up(.*)",
-  "/admin/login",
   "/api/uploadthing",
   "/api/webhooks(.*)",
 ]);
@@ -27,26 +24,28 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-  const { pathname } = req.nextUrl;
-
-  // Handle admin routes with NextAuth (skip Clerk for admin routes)
-  if (isAdminRoute(req) && pathname !== "/admin/login") {
-    const session = await nextauth();
-    
-    if (!session?.user || session.user.email !== "admintamago@gmail.com") {
-      return NextResponse.redirect(new URL("/admin/login", req.url));
-    }
-    return NextResponse.next();
-  }
-
   // Skip Clerk protection for public routes
   if (isPublicRoute(req)) {
     return NextResponse.next();
   }
 
+  // Get user authentication data
+  const { userId } = await auth();
+
+  // Handle admin routes - require authentication only
+  // Role checking will be done on the client side and in API routes
+  if (isAdminRoute(req)) {
+    if (!userId) {
+      const signInUrl = new URL("/sign-in", req.url);
+      signInUrl.searchParams.set("redirect_url", req.url);
+      return NextResponse.redirect(signInUrl);
+    }
+    // Allow authenticated users to access admin routes
+    // Role validation will be handled by individual admin pages/components
+  }
+
   // Protect routes that require Clerk authentication
   if (isProtectedRoute(req)) {
-    const { userId } = await auth();
     if (!userId) {
       const signInUrl = new URL("/sign-in", req.url);
       signInUrl.searchParams.set("redirect_url", req.url);

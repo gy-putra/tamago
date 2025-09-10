@@ -16,7 +16,8 @@ import {
   ShoppingCart,
   User,
   LogIn,
-  LogOut
+  LogOut,
+  Settings
 } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
 import Link from "next/link";
@@ -27,7 +28,7 @@ import { cn } from "@/lib/utils";
 
 const SheetNavbar = () => {
   const [open, setOpen] = useState(false);
-  const { isSignedIn } = useUser();
+  const { isSignedIn, user } = useUser();
   const { signOut } = useClerk();
   const wasSignedIn = useRef(isSignedIn);
 
@@ -131,6 +132,23 @@ const SheetNavbar = () => {
                   </Link>
                 );
               })}
+              
+              {/* Admin Dashboard Link */}
+              {isSignedIn && user?.publicMetadata?.role === "admin" && (
+                <Link
+                  href="/admin"
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200",
+                    "bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30",
+                    "text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200",
+                    "group"
+                  )}
+                >
+                  <Settings className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
+                  <span className="font-medium">Dashboard</span>
+                </Link>
+              )}
             </nav>
 
             {/* Authentication Section */}

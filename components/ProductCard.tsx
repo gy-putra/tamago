@@ -25,56 +25,55 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <Link href={`/shoes/${product.id}`}>
-      <div className="bg-card border rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 p-3 cursor-pointer max-w-[200px]">
+      <div className="w-full h-auto bg-white dark:bg-neutral-900 rounded-xl shadow hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer flex flex-col justify-between">
         {/* Product Image */}
-        <div className="relative mb-2">
+        <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden rounded-t-xl">
           <Image
             src={product.image}
             alt={product.name}
-            width={150}
-            height={150}
-            className="w-full h-32 object-cover rounded-md"
+            fill
+            className="w-full object-cover"
           />
           {hasDiscount && (
-            <div className="absolute top-1 left-1 bg-red-500 text-white px-1.5 py-0.5 rounded text-xs font-bold">
+            <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-bold">
               -{discountPercentage}%
             </div>
           )}
         </div>
 
         {/* Product Info */}
-        <div className="space-y-1">
-          <h4 className="font-medium text-sm line-clamp-2 text-foreground">
+        <div className="p-4 space-y-2 flex-grow">
+          <h4 className="font-medium text-base line-clamp-2 text-foreground min-h-[3rem]">
             {product.name}
           </h4>
           
           {/* Price */}
-          <div className="flex flex-col">
+          <div className="flex flex-col space-y-1">
             {hasDiscount ? (
-              <div className="flex items-center gap-1">
-                <span className="text-sm font-bold text-foreground">
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-bold text-foreground">
                   {formatCurrency(product.price)}
                 </span>
-                <span className="text-xs text-muted-foreground line-through">
+                <span className="text-sm text-muted-foreground line-through">
                   {formatCurrency(product.originalPrice!)}
                 </span>
               </div>
             ) : (
-              <span className="text-sm font-bold text-foreground">
+              <span className="text-lg font-bold text-foreground">
                 {formatCurrency(product.price)}
               </span>
             )}
           </div>
 
           {/* Rating */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <StarRating 
               rating={product.averageRating || 0} 
               readonly={true} 
               size="sm"
             />
             {product.totalReviews > 0 && (
-              <span className="text-xs text-muted-foreground">
+              <span className="text-sm text-muted-foreground">
                 ({product.totalReviews})
               </span>
             )}

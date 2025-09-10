@@ -1,9 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import SheetNavbar from "./SheetNavbar";
 import { ModeToggle } from "./ModeToggle";
 import CartIcon from "./CartIcon";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { Heart } from "lucide-react";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
+import { Heart, LayoutDashboard, Package } from "lucide-react";
 
 const navItems = [
   {
@@ -21,6 +23,9 @@ const navItems = [
 ];
 
 const Navbar = () => {
+  const { user } = useUser();
+  const isAdmin = user?.publicMetadata?.role === "admin";
+
   return (
     <nav className="sticky top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
       <div className="flex h-16 items-center justify-between md:px-16 px-4 py-4 gap-4">
@@ -46,6 +51,26 @@ const Navbar = () => {
             >
               <Heart className="h-5 w-5" />
             </Link>
+            {/* My Orders button - show for all logged-in users */}
+            <Link 
+              href="/my-orders" 
+              className="flex items-center gap-2 px-3 py-2 rounded-full bg-green-600 hover:bg-green-700 text-white transition-colors"
+              title="My Orders"
+            >
+              <Package className="h-4 w-4" />
+              <span className="text-sm font-medium">My Orders</span>
+            </Link>
+            {/* Dashboard button - only show for admin users */}
+            {user?.publicMetadata?.role === "admin" && (
+              <Link 
+                href="/admin" 
+                className="flex items-center gap-2 px-3 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                title="Dashboard"
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                <span className="text-sm font-medium">Dashboard</span>
+              </Link>
+            )}
             <UserButton />
           </SignedIn>
           <SignedOut>
@@ -67,6 +92,13 @@ const Navbar = () => {
               title="Wishlist"
             >
               <Heart className="h-4 w-4" />
+            </Link>
+            <Link 
+              href="/my-orders" 
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              title="My Orders"
+            >
+              <Package className="h-4 w-4" />
             </Link>
           </SignedIn>
           <CartIcon />

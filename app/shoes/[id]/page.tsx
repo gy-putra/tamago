@@ -22,9 +22,9 @@ const ShoesDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
         <div className="md:w-1/2 w-full">
           <div className="flex flex-col gap-5">
             <div className="flex flex-col">
-              <h2 className="text-2xl">NAMA PRODUK</h2>
+              <h2 className="text-xl md:text-2xl">NAMA PRODUK</h2>
               <Separator />
-              <h3 className="text-xl">{shoe?.name}</h3>
+              <h3 className="text-md">{shoe?.name}</h3>
             </div>
             <div className="flex flex-col">
               <h2 className="text-2xl">DESKRIPSI</h2>

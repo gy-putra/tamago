@@ -25,7 +25,8 @@ const ListAllShoes = ({ shoes }: { shoes: any }) => {
   };
 
   return (
-    <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-4">
+    <div className="w-full px-4 md:px-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {shoes.map((shoe: any) => {
         const hasDiscount = shoe.originalPrice && shoe.originalPrice > shoe.price;
         const discountPercentage = hasDiscount 
@@ -33,7 +34,7 @@ const ListAllShoes = ({ shoes }: { shoes: any }) => {
           : 0;
           
         return (
-        <Card key={shoe.id} className="relative">
+        <Card key={shoe.id} className="relative w-full h-auto rounded-xl shadow bg-white dark:bg-neutral-900 hover:scale-105 transition-transform duration-200 ease-in-out flex flex-col justify-between">
           {/* Discount Badge */}
           {hasDiscount && (
             <DiscountBadge discountPercentage={discountPercentage} />
@@ -60,17 +61,19 @@ const ListAllShoes = ({ shoes }: { shoes: any }) => {
               </CardAction> */}
             </div>
           </CardHeader>
-          <CardContent>
-            <Image
-              src={shoe.image}
-              alt={shoe.name}
-              width={300}
-              height={300}
-              className="rounded-md w-full"
-            />
+          <CardContent className="p-0">
+            <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden rounded-t-xl">
+              <Image
+                src={shoe.image}
+                alt={shoe.name}
+                fill
+                className="w-full object-cover"
+              />
+            </div>
           </CardContent>
-          <CardFooter className="flex flex-col gap-2">
-            <CardTitle>{shoe.name}</CardTitle>
+          <CardFooter className="flex flex-col gap-3 p-4 flex-grow">
+            <CardTitle className="text-base font-medium line-clamp-2 min-h-[3rem]">{shoe.name}</CardTitle>
+            
             {/* Price Display with Discount Support */}
             <div className="text-muted-foreground w-full">
               {hasDiscount ? (
@@ -85,7 +88,7 @@ const ListAllShoes = ({ shoes }: { shoes: any }) => {
                   </div>
                 </div>
               ) : (
-                <span className="text-lg font-bold">{formatCurrency(shoe.price)}</span>
+                <span className="text-lg font-bold text-foreground">{formatCurrency(shoe.price)}</span>
               )}
             </div>
             
@@ -105,10 +108,10 @@ const ListAllShoes = ({ shoes }: { shoes: any }) => {
               </div>
             </div>
             
-            <div className="flex gap-2 w-full">
+            <div className="flex gap-2 w-full mt-auto">
               <Link
                 href={`/shoes/${shoe.id}`}
-                className="border text-sm px-3 py-1 rounded-full bg-black dark:bg-white text-white dark:text-black flex-1 text-center"
+                className="border text-sm px-2 py-2 rounded-lg bg-black dark:bg-white text-white dark:text-black flex-1 text-center hover:opacity-90 transition-opacity"
               >
                 View Details
               </Link>
@@ -129,6 +132,7 @@ const ListAllShoes = ({ shoes }: { shoes: any }) => {
         </Card>
         );
       })}
+      </div>
     </div>
   );
 };

@@ -4,13 +4,38 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId: clerkUserId } = await auth();
     
-    if (!userId) {
+    if (!clerkUserId) {
       return NextResponse.json(
         { error: "Authentication required" },
         { status: 401 }
       );
+    }
+
+    // Find or create the user in the database using Clerk's userId
+    let user = await prisma.user.findUnique({
+      where: {
+        clerkUserId: clerkUserId,
+      },
+    });
+
+    // If user doesn't exist in database, create them
+    if (!user) {
+      try {
+        user = await prisma.user.create({
+          data: {
+            clerkUserId: clerkUserId,
+            email: `user_${clerkUserId}@temp.com`, // Temporary email, should be updated with real data
+          },
+        });
+      } catch (error: any) {
+        console.error("Error creating user:", error);
+        return NextResponse.json(
+          { error: "Failed to create user record" },
+          { status: 500 }
+        );
+      }
     }
 
     const body = await request.json();
@@ -87,7 +112,7 @@ export async function POST(request: NextRequest) {
       // Create the order
       const newOrder = await tx.order.create({
         data: {
-          userId,
+          userId: user.id,
           totalPrice,
           shippingAddress,
           status: "pending",
@@ -142,10 +167,33 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error creating order:", error);
+    
+    // Handle Prisma errors
+    if (error.code === 'P2003') {
+      return NextResponse.json(
+        { error: "User or product not found." },
+        { status: 400 }
+      );
+    }
+    
+    if (error.code === 'P2002') {
+      return NextResponse.json(
+        { error: "Duplicate order detected." },
+        { status: 400 }
+      );
+    }
+    
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        { error: "Record not found." },
+        { status: 404 }
+      );
+    }
+    
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Something went wrong." },
       { status: 500 }
     );
   }
@@ -153,18 +201,43 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId: clerkUserId } = await auth();
     
-    if (!userId) {
+    if (!clerkUserId) {
       return NextResponse.json(
         { error: "Authentication required" },
         { status: 401 }
       );
     }
 
+    // Find or create the user in the database using Clerk's userId
+    let user = await prisma.user.findUnique({
+      where: {
+        clerkUserId: clerkUserId,
+      },
+    });
+
+    // If user doesn't exist in database, create them
+    if (!user) {
+      try {
+        user = await prisma.user.create({
+          data: {
+            clerkUserId: clerkUserId,
+            email: `user_${clerkUserId}@temp.com`, // Temporary email, should be updated with real data
+          },
+        });
+      } catch (error: any) {
+        console.error("Error creating user:", error);
+        return NextResponse.json(
+          { error: "Failed to create user record" },
+          { status: 500 }
+        );
+      }
+    }
+
     const orders = await prisma.order.findMany({
       where: {
-        userId,
+        userId: user.id,
       },
       include: {
         orderItems: {
@@ -179,10 +252,26 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ orders });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching orders:", error);
+    
+    // Handle Prisma errors
+    if (error.code === 'P2003') {
+      return NextResponse.json(
+        { error: "User or product not found." },
+        { status: 400 }
+      );
+    }
+    
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        { error: "Record not found." },
+        { status: 404 }
+      );
+    }
+    
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Something went wrong." },
       { status: 500 }
     );
   }

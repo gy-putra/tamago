@@ -114,20 +114,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    // Check if already in wishlist
-    const existingItem = await prisma.wishlist.findUnique({
-      where: {
-        userId_productId: {
-          userId: user.id,
-          productId: productId,
-        },
-      },
-    });
-
-    if (existingItem) {
-      return NextResponse.json({ error: "Product already in wishlist" }, { status: 400 });
-    }
-
     // Add to wishlist
     const wishlistItem = await prisma.wishlist.create({
       data: {
@@ -141,11 +127,19 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ 
       message: "Product added to wishlist", 
-      wishlistItem 
+      product: wishlistItem.product 
     }, { status: 201 });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error adding to wishlist:", error);
+    
+    // Handle Prisma unique constraint violation (P2002)
+    if (error.code === 'P2002') {
+      return NextResponse.json({ 
+        error: "Product already exists in the wishlist." 
+      }, { status: 400 });
+    }
+    
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

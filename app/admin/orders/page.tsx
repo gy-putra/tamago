@@ -1,12 +1,17 @@
-import { auth } from "@/auth";
+import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import AdminOrdersList from "./_components/AdminOrdersList";
 
 const AdminOrdersPage = async () => {
-  const session = await auth();
+  const user = await currentUser();
   
-  if (!session) redirect("/");
-  if (session?.user?.email !== "admintamago@gmail.com") {
+  // Check if user is authenticated and has admin role
+  if (!user) {
+    redirect("/sign-in");
+  }
+  
+  const userRole = user.publicMetadata?.role as string;
+  if (userRole !== "admin") {
     redirect("/");
   }
 

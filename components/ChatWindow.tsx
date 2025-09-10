@@ -15,7 +15,8 @@ const ChatWindow = ({ isOpen, onClose }: ChatWindowProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "welcome",
-      content: "Hai saya adalah asisten AI untuk membantu Anda dalam memilih sepatu 👟 atau mencari produk populer, rating?Silahkan tanyakan",
+      content: "Hai saya adalah asisten AI untuk membantu Anda dalam memilih sepatu 👟\nSilahkan Tanyakan sesuatu, misalnya:\n\
+      - Apa produk terlaris?\n- Apa produk populer?\n- Apa produk dengan rating tertinggi?",
       role: "assistant",
       timestamp: new Date(),
     },
